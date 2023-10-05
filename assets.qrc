@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>assets/calibration.jpg</file>
+        <file>assets/camera_parameters.json</file>
+    </qresource>
+</RCC>
