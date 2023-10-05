@@ -43,32 +43,25 @@ Window {
                 id: myCanvas
                 anchors.fill: parent
 
+                function drawLine(from, to) {
+                    var ctx = getContext("2d");
+                    ctx.strokeStyle = Qt.rgba(1, 0, 0, 1);
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.moveTo(from.x, from.y);
+                    ctx.lineTo(to.x, to.y);
+                    ctx.stroke();
+                }
+
                 onPaint: {
                     if (coords.length < 2) {
                         return;
                     }
 
-                    var prevX = coords[coords.length - 2].x;
-                    var prevY = coords[coords.length - 2].y;
-                    var curX = coords[coords.length - 1].x;
-                    var curY = coords[coords.length - 1].y;
-
-                    var ctx = getContext("2d");
-                    ctx.strokeStyle = Qt.rgba(1, 0, 0, 1);
-                    ctx.lineWidth = 2;
-                    ctx.beginPath();
-                    ctx.moveTo(prevX, prevY);
-                    ctx.lineTo(curX, curY);
-                    ctx.stroke();
+                    drawLine(coords[coords.length - 2], coords[coords.length - 1]);
 
                     if (coords.length === 4) {
-                        prevX = coords[0].x;
-                        prevY = coords[0].y;
-                        curX = coords[coords.length - 1].x;
-                        curY = coords[coords.length - 1].y;
-                        ctx.moveTo(prevX, prevY);
-                        ctx.lineTo(curX, curY);
-                        ctx.stroke();
+                        drawLine(coords[0], coords[coords.length - 1]);
                     }
                 }
             }
