@@ -11,6 +11,7 @@ Camera::Camera(QObject *parent)
     : QObject{parent}
     , m_distortionCoeffs{}
     , m_intrinsicParams{}
+    , m_positionInWorld{}
 {
 
 }
@@ -50,14 +51,24 @@ bool Camera::parseParametersFile(QString path)
     return true;
 }
 
+const cv::Mat &Camera::positionInWorld() const
+{
+    return m_positionInWorld;
+}
+
+void Camera::setPositionInWorld(const cv::Mat &newPositionInWorld)
+{
+    m_positionInWorld = newPositionInWorld;
+}
+
 bool Camera::parseIntrinsicParameters(const QJsonObject &obj)
 {
     bool ok = true; // TO DO: return error if true
 
     float fx = obj[QLatin1String("fx")].toVariant().toFloat(&ok);
-    float fy = obj[QLatin1String("fy")].toVariant().toFloat(&ok);;
-    float cx = obj[QLatin1String("cx")].toVariant().toFloat(&ok);;
-    float cy = obj[QLatin1String("cy")].toVariant().toFloat(&ok);;
+    float fy = obj[QLatin1String("fy")].toVariant().toFloat(&ok);
+    float cx = obj[QLatin1String("cx")].toVariant().toFloat(&ok);
+    float cy = obj[QLatin1String("cy")].toVariant().toFloat(&ok);
 
     m_intrinsicParams = (cv::Mat_<float>(3,3) << fx, 0, cx, 0, fy, cy, 0, 0, 1);
 

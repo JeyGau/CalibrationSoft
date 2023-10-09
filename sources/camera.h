@@ -23,12 +23,17 @@ public:
     bool parseIntrinsicParameters(const QJsonObject &obj);
     bool parseDistortionCoeffs(const QJsonObject &obj);
 
+    const cv::Mat &positionInWorld() const;
+    void setPositionInWorld(const cv::Mat &newPositionInWorld);
+
 public slots:
     bool parseParametersFile(QString path);
 
 private:
     cv::Mat m_intrinsicParams;
     cv::Mat m_distortionCoeffs;
+
+    cv::Mat m_positionInWorld;
 };
 
 #endif // CAMERA_H

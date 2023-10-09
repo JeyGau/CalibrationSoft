@@ -9,6 +9,7 @@
 
 #include "camera.h"
 #include "identifiedobject.h"
+#include "processor.h"
 
 class TestCalibration: public QObject
 {
@@ -71,25 +72,26 @@ void TestCalibration::parseTestDistortionParameters()
 
 void TestCalibration::testCalibration()
 {
-    cv::Mat rvec = cv::Mat::zeros(3, 1, CV_64F);
-    cv::Mat tvec = cv::Mat::zeros(3, 1, CV_64F);
-
-    bool success = cv::solvePnP(m_paperSheet.points3D(), m_paperSheet.points2D(), m_camera.intrinsicParams(), m_camera.distortionCoeffs(), rvec, tvec, false, cv::SOLVEPNP_IPPE);
-
-    QVERIFY(success);
-
-    std::cout << "Translation vector: " << tvec << std::endl;
-    std::cout << "Rotation vector: " << rvec << std::endl;
+    Processor p{&m_camera, &m_paperSheet};
+    QVERIFY(p.estimatePose());
 
     // Convert rotation vector to rotation matrix
     cv::Mat R;
-    cv::Rodrigues(rvec, R);
+    cv::Rodrigues(p.transformation().rotationVector, R);
 
     // Calculate camera position in world coordinates
-    cv::Mat cameraPosition = -R.inv() * tvec;
-
+    cv::Mat cameraPosition = -R.inv() * p.transformation().translationVector;
     // Print camera position
     std::cout << "Camera Position in World Coordinates: " << cameraPosition << std::endl;
+    cv::Mat expectedPosition = (cv::Mat_<double>(3,1) <<
+                                    968.8691370130923,
+                                    135.6954993047486,
+                                    677.3111399332236);
+    for (int i = 0; i < 3; ++i)
+    {
+        // compare with a tolerance
+        QCOMPARE(qFuzzyCompare(cameraPosition.at<double>(i, 0), expectedPosition.at<double>(i, 0)), true);
+    }
 }
 
 

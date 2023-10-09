@@ -24,11 +24,13 @@ set(PROJECT_HEADERS
         sources/identifiedobject.h
         sources/camera.h
         sources/tools.h
+        sources/processor.h
 )
 
 set(PROJECT_SOURCES
         sources/identifiedobject.cpp
         sources/camera.cpp
+        sources/processor.cpp
 )
 
 # tests
