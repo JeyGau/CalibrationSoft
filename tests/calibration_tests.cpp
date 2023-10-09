@@ -3,6 +3,7 @@
 #include <opencv2/opencv.hpp>
 
 #include <QFile>
+#include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
 
@@ -12,12 +13,19 @@ class TestCalibration: public QObject
 
 private slots:
     void initTestCase();
-//    void loadTestImage() const;
-//    void testExifExtractor();
+
+    void parseTestSheetPoints();
+    void parseTestCameraParameters();
+    void parseTestDistortionParameters();
+    //    void loadTestImage() const;
     void testCalibration();
 
 private:
-    QJsonObject m_cameraParameters;
+    QJsonObject m_testCaseJson;
+
+    std::vector<cv::Point3f> m_sheetPointsInSpace; // 3D coordinates of paper sheet
+    std::vector<cv::Point2f> m_sheetPointsInImage; // 2D coordinates of paper sheet in jpg
+    cv::Mat m_cameraMatrix, m_distCoeffs;
 };
 
 //void TestCalibration::loadTestImage() const
@@ -25,27 +33,10 @@ private:
 
 //}
 
-//void TestCalibration::testExifExtractor()
-//{
-//    QFile file(":/assets/calibration.jpg");
-//    QVERIFY(file.open(QIODevice::ReadOnly));  // Ensure the file is opened
-
-//    QByteArray data = file.readAll();
-//    easyexif::EXIFInfo result;
-//    int code = result.parseFrom(reinterpret_cast<unsigned char*>(data.data()), data.size());
-//    QCOMPARE(code, 0);
-
-//    // Print and check specific EXIF data
-//    qDebug() << "Camera make:" << result.Make.c_str();
-//    qDebug() << "Camera model:" << result.Model.c_str();
-
-//    QVERIFY(!result.Make.empty());
-//    QVERIFY(!result.Model.empty());
-//}
 
 void TestCalibration::initTestCase()
 {
-    QFile file(":/assets/camera_parameters.json");
+    QFile file(":/tests/test.json");
     QVERIFY(file.open(QIODevice::ReadOnly));
 
     QByteArray data = file.readAll();
@@ -53,26 +44,110 @@ void TestCalibration::initTestCase()
     auto doc = QJsonDocument::fromJson(data, &error);
     QCOMPARE(error.error, QJsonParseError::NoError);
 
-    m_cameraParameters = doc.object();
-    QVERIFY(!m_cameraParameters.isEmpty());
+    m_testCaseJson = doc.object();
+    QVERIFY(!m_testCaseJson.isEmpty());
+}
 
-    qDebug().noquote() << doc.toJson();
+void TestCalibration::parseTestSheetPoints()
+{
+    QJsonArray objectPointsArray = m_testCaseJson["object_points"].toArray();
+    QVERIFY(!objectPointsArray.isEmpty());
+
+    bool ok = false;
+    for (const auto point: objectPointsArray) {
+        float x = point.toObject()["x"].toVariant().toFloat(&ok);
+        QVERIFY(ok);
+        float y = point.toObject()["y"].toVariant().toFloat(&ok);
+        QVERIFY(ok);
+        float z = point.toObject()["z"].toVariant().toFloat(&ok);
+        QVERIFY(ok);
+        m_sheetPointsInSpace.push_back(cv::Point3f{x, y, z});
+    }
+
+    QJsonArray imagePointsArray = m_testCaseJson["image_points"].toArray();
+    QVERIFY(!imagePointsArray.isEmpty());
+
+    for (const auto point: imagePointsArray) {
+        float x = point.toObject()["x"].toVariant().toFloat(&ok);
+        QVERIFY(ok);
+        float y = point.toObject()["y"].toVariant().toFloat(&ok);
+        QVERIFY(ok);
+        m_sheetPointsInImage.push_back(cv::Point2f{x, y});
+    }
+
+}
+
+void TestCalibration::parseTestCameraParameters()
+{
+    bool ok = false;
+
+    QJsonObject intrisicParameters = m_testCaseJson["intrinsic"].toObject();
+    QVERIFY(!intrisicParameters.isEmpty());
+    float fx = intrisicParameters["fx"].toVariant().toFloat(&ok);
+    QVERIFY(ok);
+    float fy = intrisicParameters["fy"].toVariant().toFloat(&ok);;
+    QVERIFY(ok);
+    float cx = intrisicParameters["cx"].toVariant().toFloat(&ok);;
+    QVERIFY(ok);
+    float cy = intrisicParameters["cy"].toVariant().toFloat(&ok);;
+    QVERIFY(ok);
+
+    m_cameraMatrix = (cv::Mat_<float>(3,3) << fx, 0, cx, 0, fy, cy, 0, 0, 1);
+}
+
+void TestCalibration::parseTestDistortionParameters()
+{
+    bool ok = false;
+
+    QJsonObject distortionParameters = m_testCaseJson["distortion"].toObject();
+    QVERIFY(!distortionParameters.isEmpty());
+    float k1 = distortionParameters["k1"].toVariant().toFloat(&ok);
+    QVERIFY(ok);
+    float k2 = distortionParameters["k2"].toVariant().toFloat(&ok);
+    QVERIFY(ok);
+    float k3 = distortionParameters["k3"].toVariant().toFloat(&ok);
+    QVERIFY(ok);
+    float k4 = distortionParameters["k4"].toVariant().toFloat(&ok);
+    QVERIFY(ok);
+    float k5 = distortionParameters["k5"].toVariant().toFloat(&ok);
+    QVERIFY(ok);
+    float k6 = distortionParameters["k6"].toVariant().toFloat(&ok);
+    QVERIFY(ok);
+    float p1 = distortionParameters["p1"].toVariant().toFloat(&ok);
+    QVERIFY(ok);
+    float p2 = distortionParameters["p2"].toVariant().toFloat(&ok);
+    QVERIFY(ok);
+
+    m_distCoeffs = (cv::Mat_<float>(8,1) << k1, k2, p1, p2, k3, k4, k5, k6);
 }
 
 void TestCalibration::testCalibration()
 {
-    std::vector<std::vector<cv::Point3f>> objectPoints;
-    std::vector<std::vector<cv::Point2f>> imagePoints;
+    cv::Mat rvec = cv::Mat::zeros(3, 1, CV_64F);
+    cv::Mat tvec = cv::Mat::zeros(3, 1, CV_64F);
 
-    cv::Mat cameraMatrix, distCoeffs;
-    std::vector<cv::Mat> rvecs, tvecs;
+    bool success = cv::solvePnP(m_sheetPointsInSpace, m_sheetPointsInImage, m_cameraMatrix, m_distCoeffs, rvec, tvec, false, cv::SOLVEPNP_IPPE);
 
-    int flags = 0;
-    cv::Size imageSize(640, 480);
+    QVERIFY(success);
 
-    double error = cv::calibrateCamera(objectPoints, imagePoints, imageSize, cameraMatrix, distCoeffs, rvecs, tvecs, flags);
+    std::cout << "Translation vector: " << tvec << std::endl;
+    std::cout << "Rotation vector: " << rvec << std::endl;
 
-    QVERIFY(error < 1);
+    cv::Mat rotationMatrix;
+    cv::Rodrigues(rvec, rotationMatrix); // Convert rotation vector to rotation matrix
+    std::cout << rotationMatrix << std::endl;
+
+    cv::Mat transformationMatrix;
+    cv::hconcat(rotationMatrix, tvec, transformationMatrix);
+
+    cv::Mat bottomRow = (cv::Mat_<double>(1, 4) << 0, 0, 0, 1);
+    cv::vconcat(transformationMatrix, bottomRow, transformationMatrix);
+    std::cout << "Transformation matrix:\n" << transformationMatrix << std::endl;
+
+    cv::Mat objectPointMat = (cv::Mat_<double>(4, 1) << 0, 0, 0, 1); // Convert a 3D point to homogenous coordinates
+    cv::Mat cameraCoord = transformationMatrix * objectPointMat; // Apply rotation and translation
+
+    std::cout << "3D coordinates in camera's coordinate system: " << cameraCoord.t() << std::endl;
 }
 
 

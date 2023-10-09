@@ -21,7 +21,7 @@ include_directories( ${OpenCV_INCLUDE_DIRS} )
 
 # tests
 add_executable(CalibrationSoftTests
-    assets.qrc
+    tests.qrc
     tests/calibration_tests.cpp
 )
 
@@ -31,6 +31,8 @@ target_link_libraries(CalibrationSoftTests
             Qt${QT_VERSION_MAJOR}::Test
             ${OpenCV_LIBS}
 )
+
+include_directories(${CMAKE_SOURCE_DIR}/sources)
 
 set(PROJECT_SOURCES
         main.cpp
