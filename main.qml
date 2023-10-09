@@ -12,8 +12,9 @@ Window {
 
     color: "black"
 
-    property var coords2D: []
-    property var coords3D: [
+    property var coords2D: [] // coordinates points in source image of 2560*1920
+    property var coords2D_displayed: [] // coordinates points in currently displayed image
+    property var coords3D: [ // coordinates points in 3D space
         {
             "x": 0,
             "y": 0,

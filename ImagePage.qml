@@ -48,14 +48,14 @@ ColumnLayout {
             }
 
             onPaint: {
-                if (coords2D.length < 2) {
+                if (coords2D_displayed.length < 2) {
                     return;
                 }
 
-                drawLine(coords2D[coords2D.length - 2], coords2D[coords2D.length - 1]);
+                drawLine(coords2D_displayed[coords2D_displayed.length - 2], coords2D_displayed[coords2D_displayed.length - 1]);
 
-                if (coords2D.length === 4) {
-                    drawLine(coords2D[0], coords2D[coords2D.length - 1]);
+                if (coords2D_displayed.length === 4) {
+                    drawLine(coords2D_displayed[0], coords2D_displayed[coords2D_displayed.length - 1]);
                 }
             }
         }
@@ -69,9 +69,10 @@ ColumnLayout {
                     return;
                 }
 
-                coords2D.push({x: mouseX, y: mouseY})
+                coords2D_displayed.push({x: mouseX, y: mouseY})
+                coords2D.push({x: mouseX*resolutionRatio(), y: mouseY*resolutionRatio()})
                 var i = coords2D.length - 1;
-                selectedPointsText.text += '\n(' + coords2D[i].x*resolutionRatio() + ', ' +  coords2D[i].y*resolutionRatio()+')'
+                selectedPointsText.text += '\n(' + coords2D[i].x + ', ' +  coords2D[i].y+')'
                 + ' -> (' + coords3D[i].x + ', ' +  coords3D[i].y + ', ' +  coords3D[i].z+')';
 
                 if (coords2D.length > 1) {
@@ -81,7 +82,6 @@ ColumnLayout {
                 if (coords2D.length === 4) {
                     paperSheet.receiveCoordinates({
                                                       "coords_2D": coords2D,
-                                                      "resolution_ratio": resolutionRatio()
                                                    });
                     loadButton.enabled = true;
                 }

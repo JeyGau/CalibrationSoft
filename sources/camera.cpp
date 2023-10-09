@@ -9,12 +9,13 @@
 
 Camera::Camera(QObject *parent)
     : QObject{parent}
-    , m_cameraParameters{}
+    , m_distortionCoeffs{}
+    , m_intrinsicParams{}
 {
 
 }
 
-void Camera::parseParametersFile(QString path)
+bool Camera::parseParametersFile(QString path)
 {
     qInfo() << "Parsing camera parameters from path:" << path;
 
@@ -27,7 +28,7 @@ void Camera::parseParametersFile(QString path)
     QFile file(path);
     if (!file.open(QFile::ReadOnly)) {
         qInfo() << "Parsing failed with error: couldn't open file";
-        return;
+        return false;
     }
 
     // read file
@@ -37,7 +38,7 @@ void Camera::parseParametersFile(QString path)
     if (error.error != QJsonParseError::NoError) {
         qInfo() << "Parsing failed with error:";
         qCritical() << error.errorString();
-        return;
+        return false;
     }
 
     // parse file
@@ -45,9 +46,8 @@ void Camera::parseParametersFile(QString path)
     parseIntrinsicParameters(cameraParametersObj[QLatin1String("intrinsic")].toObject());
     parseDistortionCoeffs(cameraParametersObj[QLatin1String("distortion")].toObject());
 
-    qInfo() << "Camera parameters parsed successfully:";
-    qInfo() << "Intrinsic parameters:" << Tools::toString(m_cameraParameters.intrinsicParams);
-    qInfo() << "Distortion parameters:" << Tools::toString(m_cameraParameters.distortionCoeffs);
+    qInfo() << "Camera parameters parsed successfully";
+    return true;
 }
 
 bool Camera::parseIntrinsicParameters(const QJsonObject &obj)
@@ -59,7 +59,9 @@ bool Camera::parseIntrinsicParameters(const QJsonObject &obj)
     float cx = obj[QLatin1String("cx")].toVariant().toFloat(&ok);;
     float cy = obj[QLatin1String("cy")].toVariant().toFloat(&ok);;
 
-    m_cameraParameters.intrinsicParams = (cv::Mat_<float>(3,3) << fx, 0, cx, 0, fy, cy, 0, 0, 1);
+    m_intrinsicParams = (cv::Mat_<float>(3,3) << fx, 0, cx, 0, fy, cy, 0, 0, 1);
+
+    qInfo() << "Intrinsic parameters:" << Tools::toString(m_intrinsicParams);
 
     return ok;
 }
@@ -77,7 +79,19 @@ bool Camera::parseDistortionCoeffs(const QJsonObject &obj)
     float p1 = obj[QLatin1String("p1")].toVariant().toFloat(&ok);
     float p2 = obj[QLatin1String("p2")].toVariant().toFloat(&ok);
 
-    m_cameraParameters.distortionCoeffs = (cv::Mat_<float>(8,1) << k1, k2, p1, p2, k3, k4, k5, k6);
+    m_distortionCoeffs = (cv::Mat_<float>(8,1) << k1, k2, p1, p2, k3, k4, k5, k6);
+
+    qInfo() << "Distortion parameters:" << Tools::toString(m_distortionCoeffs);
 
     return ok;
+}
+
+const cv::Mat &Camera::intrinsicParams() const
+{
+    return m_intrinsicParams;
+}
+
+const cv::Mat &Camera::distortionCoeffs() const
+{
+    return m_distortionCoeffs;
 }

@@ -18,20 +18,6 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Quick Test)
 find_package(OpenCV REQUIRED)
 
 include_directories( ${OpenCV_INCLUDE_DIRS} )
-
-# tests
-add_executable(CalibrationSoftTests
-    tests.qrc
-    tests/calibration_tests.cpp
-)
-
-target_link_libraries(CalibrationSoftTests
-    PRIVATE Qt${QT_VERSION_MAJOR}::Core
-            Qt${QT_VERSION_MAJOR}::Quick
-            Qt${QT_VERSION_MAJOR}::Test
-            ${OpenCV_LIBS}
-)
-
 include_directories(${CMAKE_SOURCE_DIR}/sources)
 
 set(PROJECT_HEADERS
@@ -41,17 +27,31 @@ set(PROJECT_HEADERS
 )
 
 set(PROJECT_SOURCES
-        main.cpp
-        qml.qrc
         sources/identifiedobject.cpp
         sources/camera.cpp
 )
 
+# tests
+add_executable(CalibrationSoftTests
+    tests.qrc
+    tests/calibration_tests.cpp
+    ${PROJECT_SOURCES}
+    ${PROJECT_HEADERS}
+)
+
+target_link_libraries(CalibrationSoftTests
+    PRIVATE Qt${QT_VERSION_MAJOR}::Core
+            Qt${QT_VERSION_MAJOR}::Quick
+            Qt${QT_VERSION_MAJOR}::Test
+            ${OpenCV_LIBS}
+)
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(CalibrationSoft
         MANUAL_FINALIZATION
         assets.qrc
+        main.cpp
+        qml.qrc
         ${PROJECT_SOURCES}
         ${PROJECT_HEADERS}
     )
@@ -59,6 +59,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
 else()
     add_executable(CalibrationSoft
       assets.qrc
+      main.cpp
+      qml.qrc
       ${PROJECT_SOURCES}
       ${PROJECT_HEADERS}
     )

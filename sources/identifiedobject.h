@@ -20,8 +20,13 @@ class IdentifiedObject : public QObject
 public:
     explicit IdentifiedObject(QObject *parent = nullptr);
 
+    const std::vector<cv::Point2f> &points2D() const;
+    const std::vector<cv::Point3f> &points3D() const;
+
+    bool parseCoordinates(const QJsonArray &obj);
+
 public slots:
-    void receiveCoordinates(QJsonObject coords);
+    bool receiveCoordinates(QJsonObject coords);
 
 private:
     std::vector<cv::Point2f> m_points2D;
