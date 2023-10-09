@@ -5,6 +5,11 @@
 
 #include <opencv2/opencv.hpp>
 
+/**
+ * @brief The Camera class parses a json file into a struct of parameters matrices:
+ * - intrinsic parameters matrix
+ * - distortion coeffs matrix
+ */
 class Camera : public QObject
 {
     Q_OBJECT
@@ -12,7 +17,11 @@ public:
     explicit Camera(QObject *parent = nullptr);
 
 public slots:
-    void parseParametersFile(const QString &path);
+    void parseParametersFile(QString path);
+
+private:
+    bool parseIntrinsicParameters(const QJsonObject &obj);
+    bool parseDistortionCoeffs(const QJsonObject &obj);
 
 signals:
 

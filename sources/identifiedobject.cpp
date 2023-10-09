@@ -2,6 +2,8 @@
 
 #include <QJsonArray>
 
+#include "tools.h"
+
 IdentifiedObject::IdentifiedObject(QObject *parent)
     : QObject{parent}
     , m_points2D()
@@ -17,9 +19,6 @@ void IdentifiedObject::receiveCoordinates(QJsonObject coords)
     for(const auto &var : coordsArray) {
         auto pointMap = var.toObject();
         m_points2D.emplace_back(pointMap["x"].toVariant().toFloat() * ratio, pointMap["y"].toVariant().toFloat() * ratio);
-    }
-
-    for (const auto &coord: m_points2D) {
-        std::cout << coord << std::endl;
+        qInfo() << "Received coordinate: " << var;
     }
 }

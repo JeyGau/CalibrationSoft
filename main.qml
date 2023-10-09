@@ -61,6 +61,11 @@ Window {
 
         visible: false
 
+        onBack: {
+            mainPage.visible = true;
+            imagePage.visible = false;
+        }
+
         onEstimatePose: {
         }
     }

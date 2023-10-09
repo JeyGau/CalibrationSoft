@@ -8,6 +8,12 @@
 #include <opencv2/opencv.hpp>
 #include <vector>
 
+/**
+ * @brief The IdentifiedObject class represents an object for which 3D coordinates and their 2D
+ * projection coordinates are known. It aims at being used for camera calibration/pose estimating.
+ *
+ * PS: This class aims at being more generic but is currently only made for an A4 paper sheet
+ */
 class IdentifiedObject : public QObject
 {
     Q_OBJECT

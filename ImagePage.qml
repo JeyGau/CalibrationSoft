@@ -12,8 +12,8 @@ ColumnLayout {
         return Math.max(photo.sourceSize.width/photo.width, photo.sourceSize.height/photo.height);
     }
 
+    signal back()
     signal estimatePose()
-
 
     Label {
         Layout.fillWidth: true
@@ -31,7 +31,7 @@ ColumnLayout {
 
         fillMode: Image.PreserveAspectFit
 
-        source: "qrc:/assets/calibration.jpg"
+        // TO DO: handle jpg file error here
 
         Canvas {
             id: myCanvas
@@ -100,11 +100,27 @@ ColumnLayout {
         text:  "Selected points are (image coordinates -> space coordinates):"
     }
 
-    Button {
-        id: loadButton
+    RowLayout {
+        Layout.fillHeight: true
+        Layout.preferredWidth: 400
         Layout.alignment: Qt.AlignHCenter
-        text: "Estimate pose"
-        enabled: false
-        onClicked: estimatePose()
+
+        spacing: 100
+
+        Button {
+            id: previousButton
+            Layout.alignment: Qt.AlignVCenter
+            text: "Back"
+            enabled: true
+            onClicked: back()
+        }
+
+        Button {
+            id: loadButton
+            Layout.alignment: Qt.AlignVCenter
+            text: "Estimate pose"
+            enabled: false
+            onClicked: estimatePose()
+        }
     }
 }
