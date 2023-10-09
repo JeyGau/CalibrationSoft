@@ -1,5 +1,6 @@
 #include "processor.h"
 
+#include "logger.h"
 #include "tools.h"
 
 Processor::Processor(Camera *camera, IdentifiedObject *object, QObject *parent)
@@ -13,38 +14,43 @@ Processor::Processor(Camera *camera, IdentifiedObject *object, QObject *parent)
 
 bool Processor::estimatePose()
 {
+    Logger::info() << "Estimating pose...";
+
     bool success = calculatePnPTransformation();
     if (!success) {
-        qCritical() << "PnP estimation failed";
+        Logger::error() << "PnP estimation failed";
         return false;
     }
     if (m_transformation.isEmpty()) {
-        qCritical() << "empty transformation vectors";
+        Logger::error() << "empty transformation vectors";
         return false;
     }
     if (m_transformation.isNull()) {
-        qCritical() << "nil transformation vectors";
+        Logger::error() << "nil transformation vectors";
         return false;
     }
 
-    qInfo() << "Translation vector" << Tools::toString(m_transformation.translationVector);
-    qInfo() << "Rotation vector" << Tools::toString(m_transformation.rotationVector);
+    Logger::success() << "Pose estimation successful!";
+    Logger::success() << "Translation vector:" << m_transformation.translationVector;
+    Logger::success() << "Rotation vector:" << m_transformation.rotationVector << '\n';
 
     return true;
 }
 
 bool Processor::calculatePnPTransformation()
 {
+    Logger::info() << "Calculating PnP transformation using SolvePnP function from openCV library...";
+
     m_transformation.rotationVector = cv::Mat::zeros(3, 1, CV_64F);
     m_transformation.translationVector = cv::Mat::zeros(3, 1, CV_64F);
 
     return cv::solvePnP(m_object->points3D(),
-                 m_object->points2D(),
-                 m_camera->intrinsicParams(),
-                 m_camera->distortionCoeffs(),
-                 m_transformation.rotationVector,
-                 m_transformation.translationVector,
-                 false,
+                        m_object->points2D(),
+                        m_camera->intrinsicParams(),
+                        m_camera->distortionCoeffs(),
+                        m_transformation.rotationVector,
+                        m_transformation.translationVector,
+                        false,
                         cv::SOLVEPNP_IPPE);
 }
 

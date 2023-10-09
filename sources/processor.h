@@ -32,9 +32,13 @@ class Processor : public QObject
 public:
     explicit Processor(Camera *camera, IdentifiedObject *object, QObject *parent = nullptr);
 
+    const Transformation &transformation() const;
+
+public slots:
     bool estimatePose();
 
-    const Transformation &transformation() const;
+signals:
+    void log(const QString &message);
 
 private:
     bool calculatePnPTransformation();

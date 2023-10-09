@@ -5,7 +5,7 @@ import QtQuick.Layouts
 
 Item {
     property string selectedJson: jsonFileLabel.text
-    property var selectedJpg: jpgFileLabel.text
+    property string selectedJpg: jpgFileLabel.text
 
     signal run()
 

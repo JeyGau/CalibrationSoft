@@ -3,7 +3,12 @@
 
 #include <opencv2/opencv.hpp>
 
+#include <QJsonObject>
 #include <QString>
+
+QDebug operator<<(QDebug debug, const cv::Mat &mat);
+QDebug operator<<(QDebug debug, const QJsonObject &obj);
+QDebug operator<<(QDebug debug, const QJsonValue &val);
 
 class Tools
 {

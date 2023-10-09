@@ -48,6 +48,7 @@ Window {
             // TO DO: use state machine and loader instead of changing visibility
             mainPage.visible = false;
             imagePage.visible = true;
+            processingPage.visible = false;
         }
     }
 
@@ -65,9 +66,28 @@ Window {
         onBack: {
             mainPage.visible = true;
             imagePage.visible = false;
+            processingPage.visible = false;
+
         }
 
         onEstimatePose: {
+            mainPage.visible = false;
+            imagePage.visible = false;
+            processingPage.visible = true;
+
+            processor.estimatePose();
         }
+    }
+
+    ProcessingPage {
+        id: processingPage
+
+        anchors.fill: parent
+        anchors.topMargin: 20
+        anchors.bottomMargin: 20
+        anchors.leftMargin: 20
+        anchors.rightMargin: 20
+
+        visible: false
     }
 }

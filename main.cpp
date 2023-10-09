@@ -4,6 +4,8 @@
 
 #include "camera.h"
 #include "identifiedobject.h"
+#include "processor.h"
+#include "logger.h"
 
 int main(int argc, char *argv[])
 {
@@ -13,11 +15,16 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
 
     QQmlApplicationEngine engine;
+    engine.rootContext()->setContextProperty("logger", &Logger::instance());
+
+    qmlRegisterUncreatableType<Logger>("CalibrationSoft.Logger", 1, 0, "Logger", "Not creatable as it is an enum type.");
 
     Camera camera;
     IdentifiedObject paperSheet;
+    Processor processor{&camera, &paperSheet};
     engine.rootContext()->setContextProperty("camera", &camera);
     engine.rootContext()->setContextProperty("paperSheet", &paperSheet);
+    engine.rootContext()->setContextProperty("processor", &processor);
 
     const QUrl url(QStringLiteral("qrc:/main.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,

@@ -1,12 +1,14 @@
-#include <QTest>
-
+// exteral lib
 #include <opencv2/opencv.hpp>
 
+// Qt
 #include <QFile>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QTest>
 
+// project
 #include "camera.h"
 #include "identifiedobject.h"
 #include "processor.h"
