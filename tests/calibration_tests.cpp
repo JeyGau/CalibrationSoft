@@ -133,21 +133,15 @@ void TestCalibration::testCalibration()
     std::cout << "Translation vector: " << tvec << std::endl;
     std::cout << "Rotation vector: " << rvec << std::endl;
 
-    cv::Mat rotationMatrix;
-    cv::Rodrigues(rvec, rotationMatrix); // Convert rotation vector to rotation matrix
-    std::cout << rotationMatrix << std::endl;
+    // Convert rotation vector to rotation matrix
+    cv::Mat R;
+    cv::Rodrigues(rvec, R);
 
-    cv::Mat transformationMatrix;
-    cv::hconcat(rotationMatrix, tvec, transformationMatrix);
+    // Calculate camera position in world coordinates
+    cv::Mat cameraPosition = -R.inv() * tvec;
 
-    cv::Mat bottomRow = (cv::Mat_<double>(1, 4) << 0, 0, 0, 1);
-    cv::vconcat(transformationMatrix, bottomRow, transformationMatrix);
-    std::cout << "Transformation matrix:\n" << transformationMatrix << std::endl;
-
-    cv::Mat objectPointMat = (cv::Mat_<double>(4, 1) << 0, 0, 0, 1); // Convert a 3D point to homogenous coordinates
-    cv::Mat cameraCoord = transformationMatrix * objectPointMat; // Apply rotation and translation
-
-    std::cout << "3D coordinates in camera's coordinate system: " << cameraCoord.t() << std::endl;
+    // Print camera position
+    std::cout << "Camera Position in World Coordinates: " << cameraPosition << std::endl;
 }
 
 
