@@ -34,22 +34,32 @@ target_link_libraries(CalibrationSoftTests
 
 include_directories(${CMAKE_SOURCE_DIR}/sources)
 
+set(PROJECT_HEADERS
+        sources/identifiedobject.h
+        sources/camera.h
+)
+
 set(PROJECT_SOURCES
         main.cpp
         qml.qrc
+        sources/identifiedobject.cpp
+        sources/camera.cpp
 )
+
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(CalibrationSoft
         MANUAL_FINALIZATION
         assets.qrc
         ${PROJECT_SOURCES}
+        ${PROJECT_HEADERS}
     )
 
 else()
     add_executable(CalibrationSoft
       assets.qrc
       ${PROJECT_SOURCES}
+      ${PROJECT_HEADERS}
     )
 endif()
 
