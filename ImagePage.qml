@@ -37,6 +37,12 @@ ColumnLayout {
             id: myCanvas
             anchors.fill: parent
 
+            function clear() {
+                var ctx = getContext("2d");
+                ctx.reset();
+                requestPaint();
+            }
+
             function drawLine(from, to) {
                 var ctx = getContext("2d");
                 ctx.strokeStyle = Qt.rgba(1, 0, 0, 1);
@@ -69,11 +75,23 @@ ColumnLayout {
                     return;
                 }
 
+                // Calculate the scaling factor
+                var imageScale = Math.min(photo.width / photo.sourceSize.width, photo.height / photo.sourceSize.height);
+
+                // Calculate the offset due to the aspect ratio preservation
+                var offsetX = (photo.width - photo.sourceSize.width * imageScale) / 2;
+                var offsetY = (photo.height - photo.sourceSize.height * imageScale) / 2;
+
+                // Calculate the mouse's position relative to the image
+                var imageX = (mouseX - offsetX) / imageScale;
+                var imageY = (mouseY - offsetY) / imageScale;
+
                 coords2D_displayed.push({x: mouseX, y: mouseY})
-                coords2D.push({x: mouseX*resolutionRatio(), y: mouseY*resolutionRatio()})
+                coords2D.push({x: imageX, y: imageY})
+
                 var i = coords2D.length - 1;
                 selectedPointsText.text += '\n(' + coords2D[i].x + ', ' +  coords2D[i].y+')'
-                + ' -> (' + coords3D[i].x + ', ' +  coords3D[i].y + ', ' +  coords3D[i].z+')';
+                        + ' -> (' + coords3D[i].x + ', ' +  coords3D[i].y + ', ' +  coords3D[i].z+')';
 
                 if (coords2D.length > 1) {
                     myCanvas.requestPaint();
@@ -82,7 +100,7 @@ ColumnLayout {
                 if (coords2D.length === 4) {
                     paperSheet.receiveCoordinates({
                                                       "coords_2D": coords2D,
-                                                   });
+                                                  });
                     loadButton.enabled = true;
                 }
             }
@@ -112,7 +130,14 @@ ColumnLayout {
             Layout.alignment: Qt.AlignVCenter
             text: "Back"
             enabled: true
-            onClicked: back()
+            onClicked: {
+                coords2D_displayed = [];
+                coords2D = [];
+                selectedPointsText.text = "Selected points are (image coordinates -> space coordinates):";
+                myCanvas.clear();
+                loadButton.enabled = false;
+                back();
+            }
         }
 
         Button {
