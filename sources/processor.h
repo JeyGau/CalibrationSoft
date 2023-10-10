@@ -34,15 +34,19 @@ public:
 
     const Transformation &transformation() const;
 
+    Camera *camera() const;
+
+    IdentifiedObject *object() const;
+
 public slots:
     bool estimatePose();
+    bool calculateCameraPositionInWorld();
 
 signals:
     void log(const QString &message);
 
 private:
     bool calculatePnPTransformation();
-//    cv::Mat getCameraPositionInWorld() const;
 
 private:
     Camera *m_camera;

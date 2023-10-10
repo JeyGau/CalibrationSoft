@@ -75,7 +75,7 @@ bool Camera::parseIntrinsicParameters(const QJsonObject &obj)
 
     m_intrinsicParams = (cv::Mat_<float>(3,3) << fx, 0, cx, 0, fy, cy, 0, 0, 1);
 
-    Logger::success() << "Intrinsic parameters:" << m_intrinsicParams;
+    Logger::info() << "Intrinsic parameters:" << m_intrinsicParams;
 
     return ok;
 }
@@ -95,7 +95,7 @@ bool Camera::parseDistortionCoeffs(const QJsonObject &obj)
 
     m_distortionCoeffs = (cv::Mat_<float>(8,1) << k1, k2, p1, p2, k3, k4, k5, k6);
 
-    Logger::success() << "Distortion parameters:" << m_distortionCoeffs;
+    Logger::info() << "Distortion parameters:" << m_distortionCoeffs;
 
     return ok;
 }

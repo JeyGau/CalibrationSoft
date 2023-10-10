@@ -21,15 +21,16 @@ class Tools
 public:
     static QString toString(const cv::Mat &matrix)
     {
-        cv::Mat oneRow = matrix.reshape(0,1);    // Treat as vector
         std::ostringstream os;
-        os << oneRow;                             // Put to the stream
-        std::string asStr = os.str();             // Get string
-        asStr.pop_back();                         // Remove brackets
-        asStr.erase(0,1);
+        for (int i = 0; i < matrix.rows; ++i)
+        {
+            cv::Mat row = matrix.row(i);
+            os << row << std::endl;
+        }
+        std::string asStr = os.str();
+
         return QString::fromStdString(asStr);
     }
-
 };
 
 

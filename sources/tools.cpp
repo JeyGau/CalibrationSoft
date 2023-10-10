@@ -12,30 +12,7 @@ QDebug operator<<(QDebug debug, const cv::Mat &mat)
                     << ", cols: " << mat.cols
                     << "] ";
 
-    debug.nospace() << "\n[";
-
-    for (int i = 0; i < mat.rows; ++i)
-    {
-        debug.nospace() << (i == 0 ? "" : " ");
-        for (int j = 0; j < mat.cols; ++j)
-        {
-            switch (mat.type())
-            {
-                case CV_32F:
-                case CV_64F:
-                    debug.nospace() << mat.at<float>(i, j) << (j == mat.cols - 1 ? "" : ", ");
-                    break;
-                case CV_8U:
-                case CV_16U:
-                case CV_32S:
-                    debug.nospace() << mat.at<int>(i, j) << (j == mat.cols - 1 ? "" : ", ");
-                    break;
-                default:
-                    debug.nospace() << "UnknownType";
-            }
-        }
-        debug.nospace() << (i == mat.rows - 1 ? "]\n" : ";\n");
-    }
+    debug.nospace() << Tools::toString(mat);
 
     return debug;
 }

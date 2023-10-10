@@ -16,8 +16,7 @@ bool Processor::estimatePose()
 {
     Logger::info() << "Estimating pose...";
 
-    bool success = calculatePnPTransformation();
-    if (!success) {
+    if (!calculatePnPTransformation()) {
         Logger::error() << "PnP estimation failed";
         return false;
     }
@@ -30,9 +29,9 @@ bool Processor::estimatePose()
         return false;
     }
 
+    Logger::info() << "Translation vector:" << m_transformation.translationVector;
+    Logger::info() << "Rotation vector:" << m_transformation.rotationVector << '\n';
     Logger::success() << "Pose estimation successful!";
-    Logger::success() << "Translation vector:" << m_transformation.translationVector;
-    Logger::success() << "Rotation vector:" << m_transformation.rotationVector << '\n';
 
     return true;
 }
@@ -54,22 +53,40 @@ bool Processor::calculatePnPTransformation()
                         cv::SOLVEPNP_IPPE);
 }
 
+IdentifiedObject *Processor::object() const
+{
+    return m_object;
+}
+
+Camera *Processor::camera() const
+{
+    return m_camera;
+}
+
 const Processor::Transformation &Processor::transformation() const
 {
     return m_transformation;
 }
 
-//cv::Mat Processor::getCameraPositionInWorld() const
-//{
-//    // Convert rotation vector to rotation matrix
-//    cv::Mat R;
-//    cv::Rodrigues(m_transformation.rotationVector, R);
+bool Processor::calculateCameraPositionInWorld()
+{
+    Logger::info() << "Calculate camera position in world from image points, object points, camera and distortion parameters...";
 
-//    // Calculate camera position in world coordinates
-//    cv::Mat cameraPosition = -R.inv() * m_transformation.translationVector;
+    if (!estimatePose()) {
+        Logger::error() << "Camera position in world calculation failed";
+        return false;
+    }
 
-//    // Print camera position
-//    qInfo() << "Camera Position in World Coordinates: " << Tools::toString(cameraPosition);
+    // Convert rotation vector to rotation matrix
+    cv::Mat R;
+    cv::Rodrigues(m_transformation.rotationVector, R);
 
-//    return cameraPosition;
-//}
+    // Calculate camera position in world coordinates
+    cv::Mat positionInWorld = -R.inv() * m_transformation.translationVector;
+    m_camera->setPositionInWorld(positionInWorld.clone());
+
+    Logger::success() << "Camera position calculated successfully!";
+    Logger::success() << "Camera position in world is: \n" << Tools::toString(m_camera->positionInWorld());
+
+    return true;
+}

@@ -43,7 +43,7 @@ bool IdentifiedObject::parseCoordinates(const QJsonArray &obj)
             Logger::error() << "Failed to parse coordinate: " << var;
             return false;
         }
-        Logger::success() << cv::Mat(point2D);
+        Logger::info() << cv::Mat(point2D);
     }
 
     return true;
