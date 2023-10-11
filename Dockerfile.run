@@ -2,9 +2,11 @@ FROM ubuntu:22.04
 
 WORKDIR /usr/src/app
 
-COPY --from=build /usr/src/app /usr/src/app
+# Copy built files from the build image
+COPY --from=calibrationsoft_build /usr/src/app /usr/src/app
 
 # Expose the necessary ports
 EXPOSE 80
 
+# Run the application
 CMD ["./CalibrationSoft"]
