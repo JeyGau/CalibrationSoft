@@ -4,6 +4,10 @@
 #include <QObject>
 #include <QDebug>
 
+/**
+ * @brief The Logger class is a custom logger for this app.
+ * It redirects console logs to this app ui with different levels
+ */
 class Logger : public QObject
 {
     Q_OBJECT
