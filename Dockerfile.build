@@ -7,7 +7,7 @@ USER root
 ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update 
-RUN apt-get install -y unzip wget xz-utils cmake g++ libopencv-dev libgl1-mesa-dev libxkbcommon-x11-0 libxcb-xinput0
+RUN apt-get install -y unzip wget xz-utils cmake g++ libopencv-dev libgl1-mesa-dev libxkbcommon-x11-0 libxcb-xinput0 libglvnd-dev
 
 # Install required tools
 RUN apt-get install -y git cmake build-essential
@@ -35,64 +35,10 @@ RUN tar -xf qt-everywhere-src-${QT_VERSION_B}.tar.xz
 
 WORKDIR /usr/src/app/qt-everywhere-src-${QT_VERSION_B}
 
-RUN ./configure -opensource -nomake examples -nomake tests -confirm-license \
-    -skip qt3d \
-    -skip qt5compat \
-    -skip qtactiveqt \
-    -skip qtcoap \
-    -skip qtcharts \
-    -skip qtconcurrent \
-    -skip qtconnectivity \
-    -skip qtdatavis3d \
-    -skip qtdeclarative \
-    -skip qtdoc \
-    -skip qtgamepad \
-    -skip qtgraphs \
-    -skip qtgrpc \
-    -skip qthttpserver \
-    -skip qtimageformats \
-    -skip qtlanguageserver \
-    -skip qtlocation \
-    -skip qtlottie \
-    -skip qtmultimedia \
-    -skip qtmqtt \
-    -skip qtnetworkauth \
-    -skip qtnfc \
-    -skip qtopengl \
-    -skip qtopcua \
-    -skip qtpdf \
-    -skip qtpositioning \
-    -skip qtpurchasing \
-    -skip qtprotobuf \
-    -skip qtquicktimeline \
-    -skip qtquickeffects \
-    -skip qtquickparticles \
-    -skip qtquickwidgets \
-    -skip qtquick3dphysics \
-    -skip qtquick3d \
-    -skip qtremoteobjects \
-    -skip qtscxml \
-    -skip qtsensors \
-    -skip qtserialbus \
-    -skip qtserialport \
-    -skip qtshadertools \
-    -skip qtspeech \
-    -skip qtsvg \
-    -skip qttools \
-    -skip qttranslations \
-    -skip qtvirtualkeyboard \
-    -skip qtwayland \
-    -skip qtwebchannel \
-    -skip qtwebengine \
-    -skip qtwebglplugin \
-    -skip qtwebsockets \
-    -skip qtwebview \
-    -skip qtwinextras \
-    -skip qtx11extras \
-    -skip qtxmlpatterns
+RUN ./configure -opensource -confirm-license -nomake tests -nomake examples -Wno-dev -DCMAKE_FIND_DEBUG_MODE=TRUE 
 
-# Compile Qt
-RUN make -j$(nproc) qtbase qtdeclarative
+# Build Qt
+RUN make -j8
 
 # Install Qt
 RUN make install
