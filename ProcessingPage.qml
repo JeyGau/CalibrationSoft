@@ -7,6 +7,8 @@ import CalibrationSoft.Logger
 ColumnLayout {
     property alias processingLogsArea: logArea
 
+    signal back()
+
     Component.onCompleted: {
         logger.logMessage.connect(function(message, type) {
             var color;
@@ -42,6 +44,17 @@ ColumnLayout {
             id: logArea
             font.pixelSize: 20
             textFormat: Text.RichText
+        }
+    }
+
+    Button {
+        id: previousButton
+        Layout.alignment: Qt.AlignVCenter
+        text: "Back"
+        enabled: true
+        onClicked: {
+            loadButton.enabled = false;
+            back();
         }
     }
 }

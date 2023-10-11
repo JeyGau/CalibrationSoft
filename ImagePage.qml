@@ -143,7 +143,7 @@ ColumnLayout {
         Button {
             id: loadButton
             Layout.alignment: Qt.AlignVCenter
-            text: "Estimate pose"
+            text: "Calculate camera positon"
             enabled: false
             onClicked: estimatePose()
         }

@@ -86,7 +86,7 @@ bool Processor::calculateCameraPositionInWorld()
     m_camera->setPositionInWorld(positionInWorld.clone());
 
     Logger::success() << "Camera position calculated successfully!";
-    Logger::success() << "Camera position in world is: \n" << Tools::toString(m_camera->positionInWorld());
+    Logger::success() << "Camera position in world is (mm): \n" << Tools::toString(m_camera->positionInWorld());
 
     return true;
 }

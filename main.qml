@@ -37,6 +37,12 @@ Window {
         }
     ]
 
+    function toMainMenu() {
+        mainPage.visible = true;
+        imagePage.visible = false;
+        processingPage.visible = false;
+    }
+
     MainPage {
         id: mainPage
         anchors.fill: parent
@@ -63,19 +69,14 @@ Window {
 
         visible: false
 
-        onBack: {
-            mainPage.visible = true;
-            imagePage.visible = false;
-            processingPage.visible = false;
-
-        }
+        onBack: toMainMenu()
 
         onEstimatePose: {
             mainPage.visible = false;
             imagePage.visible = false;
             processingPage.visible = true;
 
-            processor.estimatePose();
+            processor.calculateCameraPositionInWorld();
         }
     }
 
@@ -89,5 +90,7 @@ Window {
         anchors.rightMargin: 20
 
         visible: false
+
+        onBack: toMainMenu()
     }
 }
