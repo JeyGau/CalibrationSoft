@@ -4,6 +4,10 @@ WORKDIR /usr/src/app
 
 # Copy built files from the build image
 COPY --from=calibrationsoft_build /usr/src/app /usr/src/app
+COPY --from=calibrationsoft_build /usr/lib/ /usr/lib/
+COPY --from=calibrationsoft_build /usr/local/lib /usr/local/lib/
+
+ENV LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH
 
 # Expose the necessary ports
 EXPOSE 80

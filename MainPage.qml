@@ -1,7 +1,7 @@
-import QtQuick
-import QtQuick.Controls
-import QtQuick.Dialogs
-import QtQuick.Layouts
+import QtQuick 2.15
+import QtQuick.Controls 2.15
+import QtQuick.Dialogs 1.3
+import QtQuick.Layouts 1.15
 
 Item {
     property string selectedJson: jsonFileLabel.text
@@ -18,6 +18,7 @@ Item {
             font.pixelSize: 20
             Layout.columnSpan: 2
             horizontalAlignment: Text.AlignHCenter
+            color: "white"
         }
 
         Button {
@@ -28,6 +29,7 @@ Item {
         Label {
             id: jsonFileLabel
             text: "qrc:/assets/camera_parameters.json"
+            color: "white"
         }
 
         Button {
@@ -38,6 +40,7 @@ Item {
         Label {
             id: jpgFileLabel
             text: "qrc:/assets/calibration.jpg"
+            color: "white"
         }
 
         Button {

@@ -1,6 +1,6 @@
-import QtQuick
-import QtQuick.Controls
-import QtQuick.Layouts
+import QtQuick 2.15
+import QtQuick.Controls 2.15
+import QtQuick.Layouts 1.15
 
 ColumnLayout {
     spacing: 20
@@ -21,6 +21,7 @@ ColumnLayout {
 
         font.pixelSize: 20
         text: "Select all 4 corners of paper sheet from its bottom left to its bottom right corner, clockwise:"
+        color: "white"
     }
 
     Image {
@@ -116,6 +117,8 @@ ColumnLayout {
         font.pixelSize: 20
 
         text:  "Selected points are (image coordinates -> space coordinates):"
+
+        color: 'white'
     }
 
     RowLayout {

@@ -1,8 +1,8 @@
-import QtQuick
-import QtQuick.Controls
-import QtQuick.Layouts
+import QtQuick 2.15
+import QtQuick.Controls 2.15
+import QtQuick.Layouts 1.15
 
-import CalibrationSoft.Logger
+import CalibrationSoft.Logger 1.0
 
 ColumnLayout {
     property alias processingLogsArea: logArea
@@ -53,7 +53,6 @@ ColumnLayout {
         text: "Back"
         enabled: true
         onClicked: {
-            loadButton.enabled = false;
             back();
         }
     }
