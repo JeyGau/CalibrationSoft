@@ -1,0 +1,24 @@
+version: '3'
+services:
+  build:
+    build:
+      context: .
+      dockerfile: Dockerfile.build
+    volumes:
+      - .:/usr/src/app
+
+  run:
+    build:
+      context: .
+      dockerfile: Dockerfile.run
+    ports:
+      - "80:80"
+    depends_on:
+      - build
+
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    depends_on:
+      - build
