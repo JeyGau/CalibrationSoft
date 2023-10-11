@@ -35,16 +35,16 @@ There are 2 options to build: with docker or locally. If you already have Qt6 in
 
 1. **Clone the Repository**
 
-    ```sh
+```sh
     https://github.com/JeyGau/CalibrationSoft.git
     cd CalibrationSoft
-    ```
+```
 
 2. **Build the Docker Image**
 
-    ```sh
+```sh
     docker-compose up build
-    ```
+```
 
     This command builds a Docker image and tags it as `calibration-soft`.
 
@@ -52,17 +52,17 @@ There are 2 options to build: with docker or locally. If you already have Qt6 in
 
 Execute the software using the following Docker command:
 
-    ```sh
+```sh
     docker-compose up run
-    ```
+```
 
 #### Test
 
 Execute unit tests using the following Docker command:
 
-    ```sh
+```sh
     docker-compose up test
-    ```
+```
 
 ### Locally
 
@@ -75,47 +75,47 @@ Execute unit tests using the following Docker command:
 
 1. **Clone the Repository**
 
-    ```sh
+```sh
     https://github.com/JeyGau/CalibrationSoft.git
     cd CalibrationSoft
-    ```
+```
 
 2. **Build locally**
 
 Create a build directory and navigate into it:
 
-    ```sh
+```sh
     mkdir build
     cd build
-    ```
+```
 
 Configure the build using CMake. You may need to specify the path to your Qt installation using CMAKE_PREFIX_PATH:
 
-    ```sh
+```sh
     cmake .. -DCMAKE_PREFIX_PATH=<path-to-qt>
-    ```   
+```   
 
 Replace <path-to-qt> with the actual path to your Qt installation.
 
 Compile the project:
 
-    ```sh
+```sh
     make
-    ```    
+```    
 
 ### Run
 
 After building, you can run the application directly from the build directory.
 
-    ```sh
+```sh
     ./CalibrationSoft
-    ```   
+```   
 
 ### Test     
 
-    ```sh
+```sh
     ./CalibrationSoftTests
-    ```   
+```   
 
 ## Sources
 
