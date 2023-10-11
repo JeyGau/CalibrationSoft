@@ -46,7 +46,7 @@ There are 2 options to build: with docker or locally. If you already have Qt6 in
     docker-compose up build
 ```
 
-    This command builds a Docker image and tags it as `calibration-soft`.
+This command builds a Docker image and tags it as `calibration-soft`.
 
 #### Run
 
