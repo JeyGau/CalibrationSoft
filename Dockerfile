@@ -29,18 +29,6 @@ RUN apt-get update && apt-get install -y \
     x11-apps \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# # Clone the md4c repository
-# RUN git clone https://github.com/mity/md4c.git
-
-# # Go to the md4c directory
-# WORKDIR /usr/src/app/md4c
-
-# # Build md4c
-# RUN mkdir build && cd build && cmake .. && make
-
-# # Install md4c
-# RUN cd build && make install
-# Copy the current directory contents into the container at /app
 ADD . /app
 
 # Set the working directory to /app
@@ -51,6 +39,3 @@ RUN cmake .
 
 # Compile the application
 RUN make
-
-# This command runs your application
-CMD ["./CalibrationSoft"]
