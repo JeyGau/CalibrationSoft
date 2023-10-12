@@ -3,12 +3,12 @@
 ## Description
 
 This project is a calibration software developed with C++ and Qt. It is equipped with a graphical user interface to facilitate the calibration process and is containerized using Docker for easy deployment and scalability.
-More details in assets/Technical challenge C++ engineer.docx.pdf.
+The goal of this app is described in assets/Technical challenge C++ engineer.docx.pdf.
 
 ### Technologies
 
 This project is using Qt for its integrated tests with QTest, for its simplicity and for QML which enables developing UIs. Moreover, since it is based on C++, it is compatible with opencv which also used in this project. 
-The application runs was made under ubuntu 22.04 and runs under any linux distribution.
+The application was made under ubuntu 22.04 and runs under any linux distribution.
 Versions used: Qt6.4.0, C++17, Ubuntu 22.04
 
 ### Inputs
