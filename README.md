@@ -22,7 +22,7 @@ Camera position in world where world origin is set to be bottom left corner of p
 
 ## How to run
 
-There are 2 options to build: with docker or locally. If you already have Qt6 installed on your machine, I would recommend building locally since Qt installation with Docker can be quite long.
+There are 2 options to build: with docker or locally. If you already have Qt installed on your machine, I would recommend building locally since Qt installation with Docker can be quite long.
 
 ### With Docker
 
