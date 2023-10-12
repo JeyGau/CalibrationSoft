@@ -8,7 +8,7 @@ More details in assets/Technical challenge C++ engineer.docx.pdf.
 ### Technologies
 
 This project is using Qt for its integrated tests with QTest, for its simplicity and for QML which enables developing UIs. Moreover, since it is based on C++, it is compatible with opencv which also used in this project. 
-Versions: Qt6.4.0, C++17
+Versions used: Qt6.4.0, C++17
 
 ### Inputs
 
@@ -22,7 +22,7 @@ Camera position in world where world origin is set to be bottom left corner of p
 
 ## How to run
 
-There are 2 options to build: with docker or locally. If you already have Qt6 installed on your machine, I would recommend building locally since Qt installation with Docker can be quite long.
+There are 2 options to build: with docker or locally. If you already have Qt installed on your machine, I would recommend building locally since Qt installation with Docker can be quite long.
 
 ### With Docker
 
@@ -31,29 +31,25 @@ There are 2 options to build: with docker or locally. If you already have Qt6 in
 - Docker 
 - Git
 
-#### Build
-
-1. **Clone the Repository**
+#### Clone the Repository
 
 ```sh
     https://github.com/JeyGau/CalibrationSoft.git
     cd CalibrationSoft
 ```
 
-2. **Build the Docker Image**
-
-```sh
-    docker-compose up build
-```
-
-This command builds a Docker image and tags it as `calibration-soft`.
-
 #### Run
 
-Execute the software using the following Docker command:
+You might need to give permissions to the user in the container to connect to the X server on the host. You can do this with the xhost command on the host machine:
 
 ```sh
-    docker-compose up run
+    xhost +local:docker
+```
+
+Execute the app using the following Docker command:
+
+```sh
+    docker-compose up app
 ```
 
 #### Test
@@ -69,7 +65,7 @@ Execute unit tests using the following Docker command:
 #### Prerequisites
 
 - Git 
-- Qt6 (>6.0.0) with at least qtbase and qtdeclarative packages 
+- Qt (>5.0.0) with at least qtbase and qtdeclarative packages 
 - cmake 
 - opencv 
 

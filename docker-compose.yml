@@ -1,24 +1,18 @@
-version: '3'
+version: '3.8'
 services:
-  build:
-    build:
+  app:
+    build: 
       context: .
-      dockerfile: Dockerfile.build
+      dockerfile: Dockerfile
+    environment:
+      - DISPLAY=$DISPLAY
+      - XDG_RUNTIME_DIR=/tmp/runtime-$USER
     volumes:
-      - .:/usr/src/app
-
-  run:
-    build:
-      context: .
-      dockerfile: Dockerfile.run
-    ports:
-      - "80:80"
-    depends_on:
-      - build
+      - /tmp/.X11-unix:/tmp/.X11-unix
+    command: "./CalibrationSoft"
 
   test:
     build:
       context: .
-      dockerfile: Dockerfile.test
-    depends_on:
-      - build
+      dockerfile: Dockerfile
+    command: "./CalibrationSoftTests"
