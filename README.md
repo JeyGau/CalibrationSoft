@@ -8,7 +8,8 @@ More details in assets/Technical challenge C++ engineer.docx.pdf.
 ### Technologies
 
 This project is using Qt for its integrated tests with QTest, for its simplicity and for QML which enables developing UIs. Moreover, since it is based on C++, it is compatible with opencv which also used in this project. 
-Versions used: Qt6.4.0, C++17
+The application runs was made under ubuntu 22.04 and runs under any linux distribution.
+Versions used: Qt6.4.0, C++17, Ubuntu 22.04
 
 ### Inputs
 
@@ -68,6 +69,7 @@ Execute unit tests using the following Docker command:
 - Qt (>5.0.0) with at least qtbase and qtdeclarative packages 
 - cmake 
 - opencv 
+- Linux distribution
 
 1. **Clone the Repository**
 
